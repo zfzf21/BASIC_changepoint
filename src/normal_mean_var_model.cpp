@@ -143,10 +143,14 @@ ModelParams* NormalMeanVarModel::init_params(const double* X,int T,int J) {
     params->names[3] = "beta";
     params->vals = new double[4];
     params->vals[0] = means_sum/(J*nsegs);
+    double means_var = means_sqsum/(J*nsegs)
+        -(means_sum/(J*nsegs))*(means_sum/(J*nsegs));
     params->vals[1] = vars_sum/(J*nsegs) /
-        (means_sqsum/(J*nsegs)-means_sum*means_sum/(J*J*nsegs*nsegs));
-    params->vals[2] = vars_sum*vars_sum/(J*J*nsegs*nsegs) / 
-        (vars_sqsum/(J*nsegs)-vars_sum*vars_sum/(J*J*nsegs*nsegs)) + 2;
+        (means_var > 0 ? means_var : 1);
+    double vars_var = vars_sqsum/(J*nsegs)
+        -(vars_sum/(J*nsegs))*(vars_sum/(J*nsegs));
+    params->vals[2] = (vars_sum/(J*nsegs))*(vars_sum/(J*nsegs)) / 
+        (vars_var > 0 ? vars_var : 1) + 2;
     params->vals[3] = vars_sum/(J*nsegs)*(params->vals[2]-1);
     delete[] means;
     delete[] vars;

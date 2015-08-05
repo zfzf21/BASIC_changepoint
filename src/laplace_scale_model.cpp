@@ -105,9 +105,10 @@ ModelParams* LaplaceScaleModel::init_params(const double* X, int T, int J) {
     params->names[0] = "alpha";
     params->names[1] = "beta";
     params->vals = new double[2];
-    params->vals[0] = deviations_sum*deviations_sum/(J*J*nsegs*nsegs) /
-        (deviations_sqsum/(J*nsegs)
-         -deviations_sum*deviations_sum/(J*J*nsegs*nsegs)) + 2;
+    double deviations_var = deviations_sqsum/(J*nsegs)
+         -(deviations_sum/(J*nsegs))*(deviations_sum/(J*nsegs));
+    params->vals[0] = (deviations_sum/(J*nsegs))*(deviations_sum/(J*nsegs))
+        / (deviations_var > 0 ? deviations_var : 1) + 2;
     params->vals[1] = deviations_sum/(J*nsegs)*(params->vals[0]-1);
     delete[] deviations;
     return params;

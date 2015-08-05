@@ -110,9 +110,12 @@ ModelParams* PoissonModel::init_params(const double* X, int T, int J) {
     params->names[0] = "alpha";
     params->names[1] = "beta";
     params->vals = new double[2];
-    params->vals[0] = means_sum*means_sum/(J*J*nsegs*nsegs) /
-        (means_sqsum/(J*nsegs)-means_sum*means_sum/(J*J*nsegs*nsegs));
-    params->vals[1] = params->vals[0] / (means_sum/(J*nsegs));
+    double means_var = means_sqsum/(J*nsegs)
+        -(means_sum/(J*nsegs))*(means_sum/(J*nsegs));
+    params->vals[0] = (means_sum/(J*nsegs))*(means_sum/(J*nsegs)) /
+        (means_var > 0 ? means_var : 1);
+    params->vals[1] = params->vals[0] / (means_sum > 0 ?
+            means_sum/(J*nsegs) : 1);
     delete[] means;
     return params;
 }

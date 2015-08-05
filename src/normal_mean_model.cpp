@@ -130,8 +130,9 @@ ModelParams* NormalMeanModel::init_params(const double* X, int T, int J) {
     params->vals = new double[3];
     params->vals[0] = means_sum/(J*nsegs);
     params->vals[1] = vars_sum/(J*nsegs);
-    params->vals[2] = means_sqsum/(J*nsegs)
-        - means_sum*means_sum/(J*J*nsegs*nsegs);
+    double means_var = means_sqsum/(J*nsegs)
+        - (means_sum/(J*nsegs)) * (means_sum/(J*nsegs));
+    params->vals[2] = params->vals[1] / (means_var > 0 ? means_var : 1);
     delete[] means;
     delete[] vars;
     return params;

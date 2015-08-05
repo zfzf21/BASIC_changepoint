@@ -26,15 +26,16 @@ ChangeParams* init_change_params(int J) {
     ChangeParams* chg_params = new ChangeParams();
     if (J <= 9)
         J = 10;
-    chg_params->Q = J/2;
-    chg_params->q_vals = new double[J/2];
-    chg_params->log_piq = new double[J/2];
-    for (int j = 0; j < J/2; ++j) {
+    int nbins = (J-1)/2+1;
+    chg_params->Q = nbins;
+    chg_params->q_vals = new double[nbins];
+    chg_params->log_piq = new double[nbins];
+    for (int j = 0; j < nbins; ++j) {
         chg_params->q_vals[j] = double(j)/J;
         if (j == 0)
             chg_params->log_piq[j] = log(0.9);
         else
-            chg_params->log_piq[j] = log(0.1/(J/2-1));
+            chg_params->log_piq[j] = log(0.1/(nbins-1));
     }
     return chg_params;
 }
