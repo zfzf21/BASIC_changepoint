@@ -6,8 +6,8 @@ Simultaneous Changepoints in Multiple Data Sequences''.
 
 INSTALL
 ------------------------------------------------
-This package requires a working installation of Python 2.7 and numpy. From a
-terminal, cd to the pylib subdirectory and execute
+This package requires a working installation of Python 2.7, numpy, and
+matplotlib. From a terminal, cd to the pylib subdirectory and execute
 
   python setup.py build
   python setup.py install
@@ -15,6 +15,9 @@ terminal, cd to the pylib subdirectory and execute
 To test your installation, cd to the pylib/test subdirectory and execute
 
   python test.py
+
+This will test all of the implemented likelihood model and plot simulated data
+with detected changepoints.
 
 To install to a local directory (e.g. if you do not have administrative access
 to the default install location), cd to the pylib subdirectory and execute
@@ -29,6 +32,14 @@ added to your PYTHONPATH environment variable (e.g. by adding the line
   export PYTHONPATH=<YOUR-INSTALL-LOCATION>/lib/python2.7/site-packages:$PYTHONPATH
 
 to your .bashrc or equivalent file).
+
+The installation assumes that the default C++ compiler used by Python has
+C++-11 support. The compiler may be manually set within the setup.py file by
+adding the lines
+
+  import os
+  os.environ["CXX"] = <YOUR-C++-COMPILER>
+
 
 USAGE
 ------------------------------------------------------
