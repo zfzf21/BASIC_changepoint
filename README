@@ -1,0 +1,80 @@
+Author: Zhou Fan
+Version: 1.0.0
+Description: This library is a Python/C++ implementation of the algorithms
+described in Fan, Z. and Mackey, L. ``An Empirical Bayesian Analysis of
+Simultaneous Changepoints in Multiple Data Sequences''.
+
+INSTALL
+------------------------------------------------
+This package requires a working installation of Python 2.7 and numpy. From a
+terminal, cd to the pylib subdirectory and execute
+
+  python setup.py build
+  python setup.py install
+
+To test your installation, cd to the pylib/test subdirectory and execute
+
+  python test.py
+
+To install to a local directory (e.g. if you do not have administrative access
+to the default install location), cd to the pylib subdirectory and execute
+
+  python setup.py build
+  python setup.py install --prefix=<YOUR-INSTALL-LOCATION>
+
+where <YOUR-INSTALL-LOCATION> should be replaced by a local installation
+directory. Ensure that <YOUR-INSTALL-LOCATION>/lib/python2.7/site-packages is
+added to your PYTHONPATH environment variable (e.g. by adding the line
+
+  export PYTHONPATH=<YOUR-INSTALL-LOCATION>/lib/python2.7/site-packages:$PYTHONPATH
+
+to your .bashrc or equivalent file).
+
+USAGE
+------------------------------------------------------
+To read a CSV-formatted data matrix 'X.csv' (with rows indexing sequences and
+columns indexing sequential positions/time points) into Python:
+
+  import numpy
+  X = numpy.loadtxt('X.csv', delimiter=',')
+  (J,T) = X.shape
+
+To draw 200 samples of changepoint locations using MCMC and estimate
+changepoint model parameters using MCEM (assuming a Gaussian observation model
+with changing mean and fixed variance):
+
+  import BASIC_changepoint as BASIC
+  [samples, model_params, pi_q, q_vals] = BASIC.MCMC_sample(X, 'normal_mean',
+        sample_iters=200, MCEM_schedule=[10,20,40,60,100])
+
+To obtain a posterior mode point-estimate of changepoints, using the
+MCMC-estimated posterior mean rounded to 0--1 as an initial guess:
+
+  chg_probs = BASIC.marginal_change_probs(samples[100:], J, T)
+  mode = BASIC.compute_posterior_mode(X, 'normal_mean', model_params, pi_q,
+        q_vals, Z=(chg_probs>0.5))
+
+To plot the first four sequences in X with their detected changepoints:
+
+  fig = BASIC.plot_changes(X, mode, seqs=[0,1,2,3])
+  fig.show()
+
+To save the MCMC sampling output to a (compressed) file 'MCMC_out.pkl' on disk,
+and to read it back from disk:
+
+  import cPickle
+  cPickle.dump([samples, model_params, pi_q, q_vals], open('MCMC_out.pkl','w'))
+  [samples, model_params, pi_q, q_vals] = cPickle.load(open('MCMC_out.pkl','r'))
+
+To convert the posterior mode point-estimate to a binary 0--1 matrix of
+changepoint indicator variables and save it to a CSV-formatted text file
+'Z_mode.csv':
+
+  Z = BASIC.change_dict_to_Z_matrix(mode, J, T)
+  numpy.savetxt('Z_mode.csv', Z, fmt='%d', delimiter=',')
+
+For further documentation on MCMC_sample, compute_posterior_mode, and other
+functions in the BASIC library:
+
+  help(BASIC)
+
