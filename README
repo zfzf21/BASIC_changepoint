@@ -1,5 +1,5 @@
 Author: Zhou Fan
-Version: 1.0.0
+Version: 1.0.1
 Description: This library is a Python/C++ implementation of the algorithms
 described in Fan, Z. and Mackey, L. ``An Empirical Bayesian Analysis of
 Simultaneous Changepoints in Multiple Data Sequences''.
