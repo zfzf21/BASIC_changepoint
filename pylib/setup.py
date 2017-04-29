@@ -20,5 +20,6 @@ setup(name="BASIC_changepoint",
                 '../src/normal_mean_var_model.cpp',
                 '../src/normal_var_model.cpp',
                 '../src/poisson_model.cpp'],
-                               include_dirs=[get_python_inc(), numpy.get_include()])]
+            include_dirs=[get_python_inc(), numpy.get_include()],
+            extra_compile_args=['-std=c++11'])]
         )

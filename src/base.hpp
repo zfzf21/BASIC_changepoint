@@ -4,6 +4,7 @@
 #include <math.h>
 #include <limits>
 #include <string>
+#include <stdexcept>
 
 namespace bayesian_simultaneous_changepoint {
 
