@@ -1,6 +1,5 @@
 import BASIC_changepoint
 import numpy as np
-import matplotlib.pyplot as plt
 
 def default_params(model):
     T = 1000
@@ -102,9 +101,14 @@ def test_model(model):
 if __name__ == '__main__':
     np.random.seed(123)
     test_model('normal_mean')
+    raw_input('[PRESS ENTER TO CONTINUE]')
     test_model('normal_var')
+    raw_input('[PRESS ENTER TO CONTINUE]')
     test_model('normal_mean_var')
+    raw_input('[PRESS ENTER TO CONTINUE]')
     test_model('poisson')
+    raw_input('[PRESS ENTER TO CONTINUE]')
     test_model('bernoulli')
+    raw_input('[PRESS ENTER TO CONTINUE]')
     test_model('laplace_scale')
     raw_input('[PRESS ENTER TO QUIT]')
