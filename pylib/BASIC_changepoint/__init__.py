@@ -133,6 +133,8 @@ def MCMC_sample(X, model, sample_iters=200, MCEM_schedule=[10,20,40,60,100],
     verbose: bool
         Print sampler progress and MCEM optimization output to screen.
     '''
+    if np.isnan(X).any() or np.isinf(X).any():
+        raise RuntimeError, "Input data has missing or infinite values"
     if q_vals is not None or pi_q is not None:
         if q_vals is None or pi_q is None:
             raise RuntimeError, "Must specify both q_vals and pi_q"
@@ -250,6 +252,8 @@ def compute_posterior_mode(X, model, model_params, pi_q, q_vals, Z=None,
     verbose: bool
         Print iteration progress to screen.
     '''
+    if np.isnan(X).any() or np.isinf(X).any():
+        raise RuntimeError, "Input data has missing or infinite values"
     q_vals = list(q_vals)
     pi_q = list(pi_q)
     if len(q_vals) != len(pi_q):
