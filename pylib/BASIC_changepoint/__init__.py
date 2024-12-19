@@ -1,6 +1,6 @@
 import numpy as np
-import _c_funcs
-from _version import __version__
+import BASIC_changepoint._c_funcs as _c_funcs
+from BASIC_changepoint._version import __version__
 
 def seed(s):
     ''' Seed random number generator for MCMC sampler
@@ -134,18 +134,18 @@ def MCMC_sample(X, model, sample_iters=200, MCEM_schedule=[10,20,40,60,100],
         Print sampler progress and MCEM optimization output to screen.
     '''
     if np.isnan(X).any() or np.isinf(X).any():
-        raise RuntimeError, "Input data has missing or infinite values"
+        raise RuntimeError("Input data has missing or infinite values")
     if q_vals is not None or pi_q is not None:
         if q_vals is None or pi_q is None:
-            raise RuntimeError, "Must specify both q_vals and pi_q"
+            raise RuntimeError("Must specify both q_vals and pi_q")
         q_vals = list(q_vals)
         pi_q = list(pi_q)
         if len(q_vals) != len(pi_q):
-            raise RuntimeError, "Incompatible q_vals and pi_q"
+            raise RuntimeError("Incompatible q_vals and pi_q")
     elif len(MCEM_schedule) == 0:
-        print "WARNING: Default priors used with no MCEM updates"
+        print("WARNING: Default priors used with no MCEM updates")
     if col_sample_approx > 0 and q_vals is not None:
-        print "WARNING: col_sample_approx > 0 has not been tested with non-default q_vals"
+        print("WARNING: col_sample_approx > 0 has not been tested with non-default q_vals")
     if Z is None:
         Z = np.zeros(X.shape, dtype='bool')
     else:
@@ -253,11 +253,11 @@ def compute_posterior_mode(X, model, model_params, pi_q, q_vals, Z=None,
         Print iteration progress to screen.
     '''
     if np.isnan(X).any() or np.isinf(X).any():
-        raise RuntimeError, "Input data has missing or infinite values"
+        raise RuntimeError("Input data has missing or infinite values")
     q_vals = list(q_vals)
     pi_q = list(pi_q)
     if len(q_vals) != len(pi_q):
-        raise RuntimeError, "Incompatible q_vals and pi_q"
+        raise RuntimeError("Incompatible q_vals and pi_q")
     if Z is None:
         Z = np.zeros(X.shape, dtype='bool')
     else:
