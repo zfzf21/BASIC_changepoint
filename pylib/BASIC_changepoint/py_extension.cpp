@@ -24,7 +24,7 @@ bool py_extract_MCEM_schedule(PyObject* py_MCEM_schedule,
     }
     MCEM_schedule.resize((int)PyList_Size(py_MCEM_schedule));
     for (int i = 0; i < (int)PyList_Size(py_MCEM_schedule); ++i)
-        MCEM_schedule[i] = (int)PyInt_AsLong(PyList_GetItem(
+        MCEM_schedule[i] = (int)PyLong_AsLong(PyList_GetItem(
                     py_MCEM_schedule, i));
     return true;
 }
@@ -57,7 +57,7 @@ bool py_extract_params(PyObject* py_params, ModelParams*& p) {
     Py_ssize_t pos = 0;
     int k = 0;
     while (PyDict_Next(py_params, &pos, &key, &value)) {
-        p->names[k] = std::string(PyString_AsString(key));
+        p->names[k] = std::string(PyUnicode_AsUTF8(key));
         p->vals[k] = PyFloat_AsDouble(value);
         ++k;
     }
@@ -132,11 +132,11 @@ bool py_check_matrices(PyObject* np_X, PyObject* np_Z, int& T, int& J) {
         PyObject* key;
         PyObject* value;
         while (PyDict_Next(py_dict, &pos, &key, &value)) {
-            int t = (int)PyInt_AsLong(key);
+            int t = (int)PyLong_AsLong(key);
             chg_hist[i].insert(std::make_pair(t, std::vector<int>()));
             chg_hist[i][t].resize((int)PyList_Size(value));
             for (unsigned j = 0; j < chg_hist[i][t].size(); ++j)
-                chg_hist[i][t][j] = (int)PyInt_AsLong(PyList_GetItem(
+                chg_hist[i][t][j] = (int)PyLong_AsLong(PyList_GetItem(
                             value, (Py_ssize_t)j));
         }
     }
@@ -273,11 +273,11 @@ PyObject* py_gibbs_sample(PyObject* self, PyObject* args) {
         PyObject* py_chg = PyDict_New();
         for (Changes::const_iterator iter = chg_hist[i].begin();
                 iter != chg_hist[i].end(); ++iter) {
-            PyObject* py_t = PyInt_FromLong((long)iter->first);
+            PyObject* py_t = PyLong_FromLong((long)iter->first);
             PyObject* py_js = PyList_New((Py_ssize_t)iter->second.size());
             for (unsigned j = 0; j < iter->second.size(); ++j)
                 PyList_SetItem(py_js, (Py_ssize_t)j,
-                        PyInt_FromLong((long)iter->second[j]));
+                        PyLong_FromLong((long)iter->second[j]));
             PyDict_SetItem(py_chg, py_t, py_js);
             Py_DECREF(py_t);
             Py_DECREF(py_js);
@@ -930,8 +930,24 @@ static PyMethodDef methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
+
+static struct PyModuleDef _c_funcs_module = {
+    // See: https://docs.python.org/3/c-api/module.html
+    PyModuleDef_HEAD_INIT, // Basename, it's always this. 
+    "_c_funcs",  // Module name
+    NULL,        // Optional docstring
+    -1,          // Size of per-interpreter state (or -1 for global state)
+    methods   // Array of methods
+};
+
+// Initialization function
 PyMODINIT_FUNC
-init_c_funcs(void) {
-    (void)Py_InitModule("_c_funcs", methods);
-    import_array();
+PyInit__c_funcs(void) {
+    // See https://docs.python.org/3/c-api/intro.html#c.PyMODINIT_FUNC
+    //
+    import_array();      // Initialize NumPy C API
+    // We import_array to avoid error with PyArray_FROM_OTF in MCMC sampler.
+    // See https://stackoverflow.com/questions/60748039/building-numpy-c-extension-segfault-when-calling-pyarray-from-otf
+    
+    return PyModule_Create(&_c_funcs_module);
 }

@@ -28,7 +28,7 @@ def default_params(model):
         params['alpha'] = 1.0
         params['beta'] = 1.0
     else:
-        raise RuntimeError, "Unrecognized model"
+        raise RuntimeError("Unrecognized model")
     q_vals = [0,0.1,0.2,0.3,0.4]
     pi_q = [0.99,0.0025,0.0025,0.0025,0.0025]
     return T, J, params, q_vals, pi_q
@@ -77,12 +77,12 @@ def generate_data(T, J, model, params, q_vals, pi_q):
                             1.0/params['beta'])
                     X[j,start:end] = np.random.laplace(0,scale,end-start)
                 else:
-                    raise RuntimeError, "Unrecognized model"
+                    raise RuntimeError("Unrecognized model")
                 start = end
     return X, Z
 
 def test_model(model):
-    print 'Testing ' + model
+    print(f"Testing {model}")
     T, J, params, q_vals, pi_q = default_params(model)
     X, Z = generate_data(T, J, model, params, q_vals, pi_q)
     true_chg_fig = BASIC_changepoint.plot_changes(X,
@@ -101,14 +101,14 @@ def test_model(model):
 if __name__ == '__main__':
     np.random.seed(123)
     test_model('normal_mean')
-    raw_input('[PRESS ENTER TO CONTINUE]')
+    input(f"[PRESS ENTER TO CONTINUE]")
     test_model('normal_var')
-    raw_input('[PRESS ENTER TO CONTINUE]')
+    input(f"[PRESS ENTER TO CONTINUE]")
     test_model('normal_mean_var')
-    raw_input('[PRESS ENTER TO CONTINUE]')
+    input(f"[PRESS ENTER TO CONTINUE]")
     test_model('poisson')
-    raw_input('[PRESS ENTER TO CONTINUE]')
+    input(f"[PRESS ENTER TO CONTINUE]")
     test_model('bernoulli')
-    raw_input('[PRESS ENTER TO CONTINUE]')
+    input(f"[PRESS ENTER TO CONTINUE]")
     test_model('laplace_scale')
-    raw_input('[PRESS ENTER TO QUIT]')
+    input(f"[PRESS ENTER TO QUIT.")

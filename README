@@ -1,12 +1,12 @@
 Author: Zhou Fan
-Version: 1.0.2
+Version: 1.1.0
 Description: This library is a Python/C++ implementation of the algorithms
 described in Fan, Z. and Mackey, L. ``An Empirical Bayesian Analysis of
 Simultaneous Changepoints in Multiple Data Sequences''.
 
 INSTALL
 ------------------------------------------------
-This package requires a working installation of Python 2.7, numpy, and
+This package requires a working installation of Python 3.x, numpy, and
 matplotlib. From a terminal, cd to the pylib subdirectory and execute
 
   python setup.py build
